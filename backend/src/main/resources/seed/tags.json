@@ -1,0 +1,502 @@
+[
+  {
+    "id": "tag-001",
+    "name": "artifact",
+    "category": "medium"
+  },
+  {
+    "id": "tag-002",
+    "name": "artist-abu-l-qasim-firdausi",
+    "category": "artist"
+  },
+  {
+    "id": "tag-003",
+    "name": "artist-andrea-del-sarto-andrea-d-agnolo",
+    "category": "artist"
+  },
+  {
+    "id": "tag-004",
+    "name": "artist-annibale-carracci",
+    "category": "artist"
+  },
+  {
+    "id": "tag-005",
+    "name": "artist-antoine-le-nain",
+    "category": "artist"
+  },
+  {
+    "id": "tag-006",
+    "name": "artist-antonello-da-messina-antonello-di-giovanni-d-antonio",
+    "category": "artist"
+  },
+  {
+    "id": "tag-007",
+    "name": "artist-bartolom-esteb-n-murillo",
+    "category": "artist"
+  },
+  {
+    "id": "tag-008",
+    "name": "artist-bhawani-das",
+    "category": "artist"
+  },
+  {
+    "id": "tag-009",
+    "name": "artist-dapeng-zhengkun-taih-sh-kon",
+    "category": "artist"
+  },
+  {
+    "id": "tag-010",
+    "name": "artist-david-johnson",
+    "category": "artist"
+  },
+  {
+    "id": "tag-011",
+    "name": "artist-domenico-ghirlandaio-domenico-bigordi",
+    "category": "artist"
+  },
+  {
+    "id": "tag-012",
+    "name": "artist-domingo-ortiz",
+    "category": "artist"
+  },
+  {
+    "id": "tag-013",
+    "name": "artist-el-greco-domenikos-theotokopoulos",
+    "category": "artist"
+  },
+  {
+    "id": "tag-014",
+    "name": "artist-emanuel-de-witte",
+    "category": "artist"
+  },
+  {
+    "id": "tag-015",
+    "name": "artist-fra-carnevale-bartolomeo-di-giovanni-corradini",
+    "category": "artist"
+  },
+  {
+    "id": "tag-016",
+    "name": "artist-gerard-david",
+    "category": "artist"
+  },
+  {
+    "id": "tag-017",
+    "name": "artist-giovanni-battista-gaulli-il-baciccio",
+    "category": "artist"
+  },
+  {
+    "id": "tag-018",
+    "name": "artist-goya-francisco-de-goya-y-lucientes",
+    "category": "artist"
+  },
+  {
+    "id": "tag-019",
+    "name": "artist-guido-reni",
+    "category": "artist"
+  },
+  {
+    "id": "tag-020",
+    "name": "artist-hans-memling",
+    "category": "artist"
+  },
+  {
+    "id": "tag-021",
+    "name": "artist-hendrick-ter-brugghen",
+    "category": "artist"
+  },
+  {
+    "id": "tag-022",
+    "name": "artist-jacometto-jacometto-veneziano",
+    "category": "artist"
+  },
+  {
+    "id": "tag-023",
+    "name": "artist-joachim-patinir",
+    "category": "artist"
+  },
+  {
+    "id": "tag-024",
+    "name": "artist-jos-guadalupe-posada",
+    "category": "artist"
+  },
+  {
+    "id": "tag-025",
+    "name": "artist-luca-signorelli-luca-d-egidio-di-luca-di-ventura",
+    "category": "artist"
+  },
+  {
+    "id": "tag-026",
+    "name": "artist-lucas-cranach-the-elder",
+    "category": "artist"
+  },
+  {
+    "id": "tag-027",
+    "name": "artist-martin-johnson-heade",
+    "category": "artist"
+  },
+  {
+    "id": "tag-028",
+    "name": "artist-osservanza-master",
+    "category": "artist"
+  },
+  {
+    "id": "tag-029",
+    "name": "artist-paul-gauguin",
+    "category": "artist"
+  },
+  {
+    "id": "tag-030",
+    "name": "artist-reinhold-vasters",
+    "category": "artist"
+  },
+  {
+    "id": "tag-031",
+    "name": "artist-riza-yi-abbasi",
+    "category": "artist"
+  },
+  {
+    "id": "tag-032",
+    "name": "artist-simon-bening",
+    "category": "artist"
+  },
+  {
+    "id": "tag-033",
+    "name": "artist-unknown",
+    "category": "artist"
+  },
+  {
+    "id": "tag-034",
+    "name": "artist-unknown-artist",
+    "category": "artist"
+  },
+  {
+    "id": "tag-035",
+    "name": "artist-vincenzo-foppa",
+    "category": "artist"
+  },
+  {
+    "id": "tag-036",
+    "name": "artist-vittore-carpaccio",
+    "category": "artist"
+  },
+  {
+    "id": "tag-037",
+    "name": "artist-yi-ha-eung",
+    "category": "artist"
+  },
+  {
+    "id": "tag-038",
+    "name": "ceramic",
+    "category": "medium"
+  },
+  {
+    "id": "tag-039",
+    "name": "city",
+    "category": "subject"
+  },
+  {
+    "id": "tag-040",
+    "name": "creator-lena-monet",
+    "category": "creator"
+  },
+  {
+    "id": "tag-041",
+    "name": "creator-milo-brush",
+    "category": "creator"
+  },
+  {
+    "id": "tag-042",
+    "name": "creator-noah-pixel",
+    "category": "creator"
+  },
+  {
+    "id": "tag-043",
+    "name": "creator-nora-gallery",
+    "category": "creator"
+  },
+  {
+    "id": "tag-044",
+    "name": "creator-otis-frame",
+    "category": "creator"
+  },
+  {
+    "id": "tag-045",
+    "name": "creator-yara-canvas",
+    "category": "creator"
+  },
+  {
+    "id": "tag-046",
+    "name": "creator-zara-ink",
+    "category": "creator"
+  },
+  {
+    "id": "tag-047",
+    "name": "drawing",
+    "category": "medium"
+  },
+  {
+    "id": "tag-048",
+    "name": "manuscript",
+    "category": "medium"
+  },
+  {
+    "id": "tag-049",
+    "name": "met-museum",
+    "category": "system"
+  },
+  {
+    "id": "tag-050",
+    "name": "nature",
+    "category": "subject"
+  },
+  {
+    "id": "tag-051",
+    "name": "painting",
+    "category": "medium"
+  },
+  {
+    "id": "tag-052",
+    "name": "portrait",
+    "category": "subject"
+  },
+  {
+    "id": "tag-053",
+    "name": "print",
+    "category": "medium"
+  },
+  {
+    "id": "tag-054",
+    "name": "public-domain",
+    "category": "system"
+  },
+  {
+    "id": "tag-055",
+    "name": "religious",
+    "category": "subject"
+  },
+  {
+    "id": "tag-056",
+    "name": "sculpture",
+    "category": "medium"
+  },
+  {
+    "id": "tag-057",
+    "name": "seeded",
+    "category": "system"
+  },
+  {
+    "id": "tag-058",
+    "name": "textile",
+    "category": "medium"
+  },
+  {
+    "id": "tag-059",
+    "name": "year-1150",
+    "category": "year"
+  },
+  {
+    "id": "tag-060",
+    "name": "year-1175",
+    "category": "year"
+  },
+  {
+    "id": "tag-061",
+    "name": "year-1294",
+    "category": "year"
+  },
+  {
+    "id": "tag-062",
+    "name": "year-1400",
+    "category": "year"
+  },
+  {
+    "id": "tag-063",
+    "name": "year-1432",
+    "category": "year"
+  },
+  {
+    "id": "tag-064",
+    "name": "year-1450",
+    "category": "year"
+  },
+  {
+    "id": "tag-065",
+    "name": "year-1465",
+    "category": "year"
+  },
+  {
+    "id": "tag-066",
+    "name": "year-1467",
+    "category": "year"
+  },
+  {
+    "id": "tag-067",
+    "name": "year-1469",
+    "category": "year"
+  },
+  {
+    "id": "tag-068",
+    "name": "year-1475",
+    "category": "year"
+  },
+  {
+    "id": "tag-069",
+    "name": "year-1480",
+    "category": "year"
+  },
+  {
+    "id": "tag-070",
+    "name": "year-1485",
+    "category": "year"
+  },
+  {
+    "id": "tag-071",
+    "name": "year-1505",
+    "category": "year"
+  },
+  {
+    "id": "tag-072",
+    "name": "year-1510",
+    "category": "year"
+  },
+  {
+    "id": "tag-073",
+    "name": "year-1523",
+    "category": "year"
+  },
+  {
+    "id": "tag-074",
+    "name": "year-1525",
+    "category": "year"
+  },
+  {
+    "id": "tag-075",
+    "name": "year-1550",
+    "category": "year"
+  },
+  {
+    "id": "tag-076",
+    "name": "year-1558",
+    "category": "year"
+  },
+  {
+    "id": "tag-077",
+    "name": "year-1595",
+    "category": "year"
+  },
+  {
+    "id": "tag-078",
+    "name": "year-1605",
+    "category": "year"
+  },
+  {
+    "id": "tag-079",
+    "name": "year-1624",
+    "category": "year"
+  },
+  {
+    "id": "tag-080",
+    "name": "year-1625",
+    "category": "year"
+  },
+  {
+    "id": "tag-081",
+    "name": "year-1633",
+    "category": "year"
+  },
+  {
+    "id": "tag-082",
+    "name": "year-1640",
+    "category": "year"
+  },
+  {
+    "id": "tag-083",
+    "name": "year-1650",
+    "category": "year"
+  },
+  {
+    "id": "tag-084",
+    "name": "year-1670",
+    "category": "year"
+  },
+  {
+    "id": "tag-085",
+    "name": "year-1700",
+    "category": "year"
+  },
+  {
+    "id": "tag-086",
+    "name": "year-1752",
+    "category": "year"
+  },
+  {
+    "id": "tag-087",
+    "name": "year-1765",
+    "category": "year"
+  },
+  {
+    "id": "tag-088",
+    "name": "year-1770",
+    "category": "year"
+  },
+  {
+    "id": "tag-089",
+    "name": "year-1771",
+    "category": "year"
+  },
+  {
+    "id": "tag-090",
+    "name": "year-1787",
+    "category": "year"
+  },
+  {
+    "id": "tag-091",
+    "name": "year-1797",
+    "category": "year"
+  },
+  {
+    "id": "tag-092",
+    "name": "year-1804",
+    "category": "year"
+  },
+  {
+    "id": "tag-093",
+    "name": "year-1853",
+    "category": "year"
+  },
+  {
+    "id": "tag-094",
+    "name": "year-1859",
+    "category": "year"
+  },
+  {
+    "id": "tag-095",
+    "name": "year-1885",
+    "category": "year"
+  },
+  {
+    "id": "tag-096",
+    "name": "year-1888",
+    "category": "year"
+  },
+  {
+    "id": "tag-097",
+    "name": "year-1891",
+    "category": "year"
+  },
+  {
+    "id": "tag-098",
+    "name": "year-1944",
+    "category": "year"
+  },
+  {
+    "id": "tag-099",
+    "name": "year-2000",
+    "category": "year"
+  },
+  {
+    "id": "tag-100",
+    "name": "year-unknown",
+    "category": "year"
+  }
+]

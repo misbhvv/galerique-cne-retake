@@ -1,0 +1,8 @@
+azurite_data/
+.env
+.env.local
+_modules/
+.next/
+.gradle/
+.idea/
+target/

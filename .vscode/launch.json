@@ -1,0 +1,14 @@
+{
+	"configurations": [
+		{
+			"type": "java",
+			"name": "Spring Boot-CloudNativeEngineeringProjectGroup2BackendApplication<backend>",
+			"request": "launch",
+			"cwd": "${workspaceFolder}",
+			"mainClass": "com.group2.backend.CloudNativeEngineeringProjectGroup2BackendApplication",
+			"projectName": "backend",
+			"args": "",
+			"envFile": "${workspaceFolder}/.env"
+		}
+	]
+}

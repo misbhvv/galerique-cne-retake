@@ -1,0 +1,61 @@
+spring:
+    application:
+        name: cloud-native-engineering-project-group2-backend
+
+    jpa:
+        defer-datasource-initialization: false
+        hibernate:
+            ddl-auto: update
+        open-in-view: false
+
+    profiles:
+        active: ${SPRING_PROFILES_ACTIVE:dev}
+
+    data:
+        mongodb:
+            auto-index-creation: true
+
+    mongodb:
+        uri: ${MONGODB_URI:mongodb://mongo:mongo@localhost:27017/cloudnativeengineeringproject?authSource=admin}
+
+    servlet:
+        multipart:
+            max-file-size: ${ARTWORK_IMAGES_MULTIPART_MAX_FILE_SIZE:5MB}
+            max-request-size: ${ARTWORK_IMAGES_MULTIPART_MAX_REQUEST_SIZE:20MB}
+
+server:
+    port: ${SERVER_PORT:8080}
+
+springdoc:
+    api-docs:
+        path: /v3/api-docs
+    swagger-ui:
+        path: /swagger-ui.html
+        enabled: true
+
+app:
+    cors:
+        allowed-origins: ${FRONTEND_URLS:http://localhost:3000,http://localhost:3001}
+    blob:
+        connection-string: ${AZURITE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;}
+        container-name: ${AZURITE_BLOB_CONTAINER:artworks}
+    artwork-images:
+        max-images-per-artwork: ${ARTWORK_IMAGES_MAX_PER_ARTWORK:1}
+        max-file-size-bytes: ${ARTWORK_IMAGES_MAX_FILE_SIZE_BYTES:5242880}
+        max-total-upload-size-bytes: ${ARTWORK_IMAGES_MAX_TOTAL_UPLOAD_SIZE_BYTES:5242880}
+        thumbnail-max-width: ${ARTWORK_IMAGES_THUMBNAIL_MAX_WIDTH:300}
+
+---
+spring:
+    config:
+        activate:
+            on-profile: dev
+---
+spring:
+    config:
+        activate:
+            on-profile: prod
+app:
+    cookie:
+        domain: ${COOKIE_DOMAIN:}
+        same-site: Strict
