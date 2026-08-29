@@ -3,6 +3,7 @@ package com.group2.backend.service;
 import com.group2.backend.config.ArtworkImageUploadProperties;
 import com.group2.backend.dto.ArtworkImageDto;
 import com.group2.backend.dto.ArtworkImageReorderRequestDto;
+import com.group2.backend.dto.ThumbnailJobMessage;
 import com.group2.backend.exception.service.ServiceException;
 import com.group2.backend.model.Account;
 import com.group2.backend.model.Artwork;
@@ -25,13 +26,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ArtworkImageService {
 
-    private static final String THUMBNAIL_CONTENT_TYPE = "image/jpeg";
-
     private final ArtworkRepository artworkRepository;
     private final ArtworkImageRepository artworkImageRepository;
     private final AuthService authService;
     private final BlobStorageService blobStorageService;
     private final ArtworkImageProcessingService artworkImageProcessingService;
+    private final ThumbnailQueueService thumbnailQueueService;
     private final ArtworkImageUploadProperties uploadProperties;
 
     @Transactional(readOnly = true)
@@ -85,13 +85,11 @@ public class ArtworkImageService {
                 blobStorageService.upload(blobName, bytes, normalizeMimeType(file.getContentType()));
                 uploadedBlobNames.add(blobName);
 
-                byte[] thumbnail = artworkImageProcessingService.createThumbnail(
-                    bytes,
-                    uploadProperties.getThumbnailMaxWidth(),
-                    normalizeMimeType(file.getContentType())
-                );
-                blobStorageService.upload(thumbName, thumbnail, THUMBNAIL_CONTENT_TYPE);
-                uploadedBlobNames.add(thumbName);
+                thumbnailQueueService.enqueue(new ThumbnailJobMessage(
+                    blobName,
+                    thumbName,
+                    uploadProperties.getThumbnailMaxWidth()
+                ));
 
                 boolean makeMain = !hasMainImage && toPersist.isEmpty();
                 ArtworkImage entity = ArtworkImage.builder()
