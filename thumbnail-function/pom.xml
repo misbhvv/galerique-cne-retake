@@ -17,6 +17,8 @@
         <azure.storage.blob.version>12.32.0</azure.storage.blob.version>
         <jackson.version>2.20.1</jackson.version>
         <junit.version>5.14.2</junit.version>
+        <functionAppName>galerique-thumbnail-function</functionAppName>
+        <functionResourceGroup>galerique-retake-rg</functionResourceGroup>
     </properties>
 
     <dependencies>
@@ -68,7 +70,8 @@
                 <artifactId>azure-functions-maven-plugin</artifactId>
                 <version>${azure.functions.maven.plugin.version}</version>
                 <configuration>
-                    <appName>galerique-thumbnail-function</appName>
+                    <resourceGroup>${functionResourceGroup}</resourceGroup>
+                    <appName>${functionAppName}</appName>
                     <runtime>
                         <os>linux</os>
                         <javaVersion>21</javaVersion>
