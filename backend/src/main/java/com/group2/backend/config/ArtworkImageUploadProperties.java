@@ -12,7 +12,7 @@ public class ArtworkImageUploadProperties {
     private int maxImagesPerArtwork = 10;
     private long maxFileSizeBytes = 5L * 1024 * 1024;
     private long maxTotalUploadSizeBytes = 20L * 1024 * 1024;
-    private int thumbnailMaxWidth = 300;
+    private int thumbnailMaxWidth = 600;
     private Set<String> allowedMimeTypes = Set.of("image/jpeg", "image/jpg", "image/png", "image/webp");
 
     public int getMaxImagesPerArtwork() {

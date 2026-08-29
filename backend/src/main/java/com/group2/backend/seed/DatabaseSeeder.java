@@ -14,6 +14,7 @@ import com.group2.backend.repository.ArtworkLikeRepository;
 import com.group2.backend.repository.ArtworkRepository;
 import com.group2.backend.repository.PurchaseRepository;
 import com.group2.backend.repository.TokenRepository;
+import com.group2.backend.config.ArtworkImageUploadProperties;
 import com.group2.backend.service.ArtworkImageProcessingService;
 import com.group2.backend.service.BlobStorageService;
 import com.group2.backend.service.TagService;
@@ -53,6 +54,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final BlobStorageService blobStorageService;
     private final ArtworkImageProcessingService artworkImageProcessingService;
+    private final ArtworkImageUploadProperties artworkImageUploadProperties;
     private final TagService tagService;
     private final ObjectMapper objectMapper;
 
@@ -186,7 +188,11 @@ public class DatabaseSeeder implements CommandLineRunner {
                 String thumbName = "artworks/" + artwork.getId() + "/thumbnails/seed-" + seed.id() + "-" + (i + 1) + ".jpg";
 
                 blobStorageService.upload(blobName, bytes, contentType);
-                byte[] thumb = artworkImageProcessingService.createThumbnail(bytes, 300, contentType);
+                byte[] thumb = artworkImageProcessingService.createThumbnail(
+                    bytes,
+                    artworkImageUploadProperties.getThumbnailMaxWidth(),
+                    contentType
+                );
                 blobStorageService.upload(thumbName, thumb, "image/jpeg");
 
                 String fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);

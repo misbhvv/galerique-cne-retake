@@ -45,7 +45,7 @@ app:
         max-images-per-artwork: ${ARTWORK_IMAGES_MAX_PER_ARTWORK:1}
         max-file-size-bytes: ${ARTWORK_IMAGES_MAX_FILE_SIZE_BYTES:5242880}
         max-total-upload-size-bytes: ${ARTWORK_IMAGES_MAX_TOTAL_UPLOAD_SIZE_BYTES:5242880}
-        thumbnail-max-width: ${ARTWORK_IMAGES_THUMBNAIL_MAX_WIDTH:300}
+        thumbnail-max-width: ${ARTWORK_IMAGES_THUMBNAIL_MAX_WIDTH:600}
 
 ---
 spring:
