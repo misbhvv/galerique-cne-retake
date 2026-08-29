@@ -13,6 +13,12 @@ param tags object = {
   managedBy: 'bicep'
 }
 
+@description('GitHub account that owns the Galerique container images.')
+param containerImageOwner string = 'misbhvv'
+
+@description('Container image tag to deploy.')
+param containerImageTag string = 'latest'
+
 @description('Database name used by the Spring Boot application.')
 param mongoDatabaseName string = 'cloudnativeengineeringproject'
 
@@ -24,6 +30,11 @@ var thumbnailQueueName = 'thumbnail-jobs'
 var artworkContainerName = 'artworks'
 var storageConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
 var mongoConnectionString = replace(mongoAccount.listConnectionStrings().connectionStrings[0].connectionString, '/?', '/${mongoDatabaseName}?')
+var backendImage = 'ghcr.io/${toLower(containerImageOwner)}/cne-galerique-backend:${containerImageTag}'
+var frontendImage = 'ghcr.io/${toLower(containerImageOwner)}/cne-galerique:${containerImageTag}'
+var backendAppName = take('${appName}-backend-${suffix}', 32)
+var frontendAppName = take('${appName}-frontend-${suffix}', 32)
+var frontendUrl = 'https://${frontendAppName}.azurewebsites.net'
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageAccountName
@@ -108,6 +119,97 @@ resource mongoDatabase 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases@2
   }
 }
 
+resource appServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
+  name: take('${appName}-web-plan-${suffix}', 60)
+  location: location
+  tags: tags
+  kind: 'linux'
+  sku: {
+    name: 'B1'
+    tier: 'Basic'
+    capacity: 1
+  }
+  properties: {
+    reserved: true
+  }
+}
+
+resource backendApp 'Microsoft.Web/sites@2023-12-01' = {
+  name: backendAppName
+  location: location
+  tags: tags
+  kind: 'app,linux,container'
+  properties: {
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      linuxFxVersion: 'DOCKER|${backendImage}'
+      ftpsState: 'Disabled'
+      minTlsVersion: '1.2'
+      appSettings: [
+        {
+          name: 'WEBSITES_PORT'
+          value: '8080'
+        }
+        {
+          name: 'SPRING_PROFILES_ACTIVE'
+          value: 'prod'
+        }
+        {
+          name: 'SERVER_PORT'
+          value: '8080'
+        }
+        {
+          name: 'MONGODB_URI'
+          value: mongoConnectionString
+        }
+        {
+          name: 'AZURE_STORAGE_CONNECTION_STRING'
+          value: storageConnectionString
+        }
+        {
+          name: 'AZURE_STORAGE_CONTAINER'
+          value: artworkContainer.name
+        }
+        {
+          name: 'THUMBNAIL_QUEUE_NAME'
+          value: thumbnailQueue.name
+        }
+        {
+          name: 'FRONTEND_URLS'
+          value: frontendUrl
+        }
+      ]
+    }
+  }
+}
+
+resource frontendApp 'Microsoft.Web/sites@2023-12-01' = {
+  name: frontendAppName
+  location: location
+  tags: tags
+  kind: 'app,linux,container'
+  properties: {
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      linuxFxVersion: 'DOCKER|${frontendImage}'
+      ftpsState: 'Disabled'
+      minTlsVersion: '1.2'
+      appSettings: [
+        {
+          name: 'WEBSITES_PORT'
+          value: '3000'
+        }
+        {
+          name: 'NODE_ENV'
+          value: 'production'
+        }
+      ]
+    }
+  }
+}
+
 resource functionPlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: take('${appName}-functions-plan-${suffix}', 60)
   location: location
@@ -178,3 +280,5 @@ output storageAccountName string = storageAccount.name
 output artworkContainerName string = artworkContainer.name
 output thumbnailQueueName string = thumbnailQueue.name
 output mongoAccountName string = mongoAccount.name
+output backendUrl string = 'https://${backendApp.properties.defaultHostName}'
+output frontendUrl string = 'https://${frontendApp.properties.defaultHostName}'
