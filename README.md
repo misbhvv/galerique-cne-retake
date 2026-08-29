@@ -1,382 +1,153 @@
-# CNE-project
+# Galerique
 
-Repository for CNE group 2
+Galerique is a digital art marketplace built with a Next.js frontend and a Spring Boot backend. Artists can upload artworks, while collectors can browse, like, and purchase them.
 
-note: Starting Point commit got shuffled due to branch merges, actual starting point is "Merge branch 'main' into cloud-migration"
-
----
-
-# Galerique — Cloud Native Engineering Project (Group 2)
-
-Galerique is a luxury digital art gallery platform. Artists can upload and sell digital artworks; collectors can browse, like and purchase them. The project consists of a Spring Boot REST API backend and a Next.js frontend.
-
----
-
-## Table of Contents
-
-1. [Project Overview](#project-overview)
-2. [Tech Stack](#tech-stack)
-3. [Architecture](#architecture)
-4. [Running the Application](#running-the-application)
-5. [Swagger / API Documentation](#swagger--api-documentation)
-6. [Authentication](#authentication)
-7. [Frontend Styling](#frontend-styling)
-8. [Project Structure](#project-structure)
-9. [Seed Data](#seed-data)
-
----
-
-## Project Overview
-
-| Layer    | Technology              | Port (default) |
-| -------- | ----------------------- | -------------- |
-| Backend  | Spring Boot 4 / Java 21 | `8080`         |
-| Frontend | Next.js 16 / React 19   | `3000`         |
-| Database | MongoDB (local)         | `5432`         |
-
----
-
-## Tech Stack
-
-### Backend
-
-| Dependency                  | Purpose                                           |
-| --------------------------- | ------------------------------------------------- |
-| Spring Boot 4.0.2           | Application framework                             |
-| Spring Web MVC              | REST controllers                                  |
-| Spring Data JPA / Hibernate | ORM & database access                             |
-| Spring Security             | Stateless cookie-based authentication             |
-| Spring Validation           | Bean validation (`@NotBlank`, `@Email`, etc.)     |
-| Springdoc OpenAPI 2.8.5     | Auto-generated Swagger UI                         |
-| Lombok                      | Boilerplate reduction (`@Data`, `@Builder`, etc.) |
-| dotenv-java 3.0.2           | Loads `.env` file into Spring environment         |
-
-### Frontend
-
-| Dependency                                 | Purpose                      |
-| ------------------------------------------ | ---------------------------- |
-| Next.js 16 (App Router)                    | React framework with SSR/SSG |
-| React 19                                   | UI library                   |
-| TypeScript 5                               | Static typing                |
-| Tailwind CSS v4                            | Utility-first CSS framework  |
-| Lucide React                               | Icon library                 |
-| Google Fonts (Inter + Bricolage Grotesque) | Typography                   |
-
----
+The retake extension applies the Azure services and Cloud Native patterns covered in the course. The main change is an asynchronous thumbnail pipeline built with Blob Storage, Queue Storage, and an Azure Function.
 
 ## Architecture
 
-```
-Browser
-  └── Next.js Frontend (localhost:3000)
-        └── fetch() with credentials: "include"
-              └── Spring Boot Backend (localhost:8080)
-                    └── MongoDB (localhost:27017)
-```
-
-- The frontend communicates with the backend via a REST API.
-- Authentication uses an **HTTP-only session cookie** (`cloud_native_engeneering_group2_session`). The backend is fully stateless — no server sessions; the cookie value is a token UID that is validated against the `tokens` table in the database.
-- CORS is configured on the backend to allow requests from the frontend origins defined in the `.env` file.
-
----
-
----
-
-## Running the application
-
-### Prerequisites
-
-Make sure the following are installed before setting up the project:
-
-- **Java 21** (JDK) — [Download](https://adoptium.net/)
-- **Maven** (or use the included `mvnw` wrapper)
-- **Node.js 20+** and **npm** — [Download](https://nodejs.org/)
-- **pgAdmin** (optional, recommended GUI) — [Download](https://www.pgadmin.org/)
-- **VS Code** with the [Spring Boot Dashboard extension](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-spring-boot-dashboard)
-- **Docker Desktop** — [Download](https://docs.docker.com/desktop/setup/install/windows-install/)
-
-### Back-end setup
-
-
-1. Create an application.yaml in `backend/src/main/resources/`
-
-```yaml
-spring:
-    application:
-        name: cloud-native-engineering-project-group2-backend
-
-    jpa:
-        defer-datasource-initialization: false
-        hibernate:
-            ddl-auto: update
-        open-in-view: false
-
-    profiles:
-        active: ${SPRING_PROFILES_ACTIVE:dev}
-
-    data:
-        mongodb:
-            auto-index-creation: true
-
-    mongodb:
-        uri: ${MONGODB_URI:mongodb://mongo:mongo@localhost:27017/cloudnativeengineeringproject?authSource=admin}
-
-    servlet:
-        multipart:
-            max-file-size: ${ARTWORK_IMAGES_MULTIPART_MAX_FILE_SIZE:5MB}
-            max-request-size: ${ARTWORK_IMAGES_MULTIPART_MAX_REQUEST_SIZE:20MB}
-
-server:
-    port: ${SERVER_PORT:8080}
-
-springdoc:
-    api-docs:
-        path: /v3/api-docs
-    swagger-ui:
-        path: /swagger-ui.html
-        enabled: true
-
-app:
-    cors:
-        allowed-origins: ${FRONTEND_URLS:http://localhost:3000,http://localhost:3001}
-    blob:
-        connection-string: ${AZURITE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;}
-        container-name: ${AZURITE_BLOB_CONTAINER:artworks}
-    artwork-images:
-        max-images-per-artwork: ${ARTWORK_IMAGES_MAX_PER_ARTWORK:1}
-        max-file-size-bytes: ${ARTWORK_IMAGES_MAX_FILE_SIZE_BYTES:5242880}
-        max-total-upload-size-bytes: ${ARTWORK_IMAGES_MAX_TOTAL_UPLOAD_SIZE_BYTES:5242880}
-        thumbnail-max-width: ${ARTWORK_IMAGES_THUMBNAIL_MAX_WIDTH:300}
-
----
-spring:
-    config:
-        activate:
-            on-profile: dev
----
-spring:
-    config:
-        activate:
-            on-profile: prod
-app:
-    cookie:
-        domain: ${COOKIE_DOMAIN:}
-        same-site: Strict
-
+```mermaid
+flowchart LR
+    user[Browser] --> frontend[Next.js<br/>Azure Web App]
+    frontend --> backend[Spring Boot API<br/>Azure Web App]
+    backend --> cosmos[(Cosmos DB<br/>Mongo API)]
+    backend -->|upload original| blob[(Azure Blob Storage)]
+    backend -->|thumbnail job| queue[Azure Queue Storage]
+    queue -->|QueueTrigger| function[Java Azure Function]
+    function -->|read original| blob
+    function -->|write thumbnail| blob
 ```
 
----
+The frontend and backend remain ordinary Docker applications hosted with Azure Web Apps. The course-specific extension is the managed storage, serverless database, and event-driven image processing around them.
 
-The application uses **MongoDB** and we will use docker to run it locally so **make sure docker is running**.
+## Upload flow
 
-1. Open a terminal in the project root folder
-2. Run the following to install and run the docker image
+1. The backend validates the uploaded image.
+2. It stores the original image in Azure Blob Storage.
+3. It sends a small JSON message to the `thumbnail-jobs` queue.
+4. It stores the artwork metadata and returns without waiting for image resizing.
+5. Queue Storage triggers the Java Azure Function.
+6. The Function downloads the original and writes a smaller JPEG thumbnail to Blob Storage.
+7. While the thumbnail is being created, the frontend temporarily displays the original image.
 
-```sh
+Only Blob names and the requested width are placed in the queue. The binary image stays in Blob Storage because Queue Storage messages are intended to remain small.
+
+## Course concepts used
+
+| Course topic | Use in Galerique |
+| --- | --- |
+| Cloud databases | Cosmos DB serverless with the Mongo API stores application documents |
+| Serverless functions | A Java Azure Function performs thumbnail generation |
+| Cloud storage | Blob Storage stores original images and thumbnails |
+| CI/CD | GitHub Actions tests the backend, Function, and frontend |
+| Infrastructure as Code | Bicep defines the Azure resources |
+| Event-driven architecture | Queue Storage separates uploads from thumbnail processing |
+| Azure Web Apps | The existing frontend and backend are hosted as Docker containers |
+
+## Why use a queue?
+
+Thumbnail generation does not need to finish before the upload request returns. Queue Storage makes the upload and worker independent:
+
+- the backend does not call the worker directly;
+- Azure Functions can retry a failed message;
+- after five failed attempts, the message moves to `thumbnail-jobs-poison`;
+- repeated processing is safe because the worker overwrites the same thumbnail path.
+
+This is eventual consistency: the thumbnail URL can exist in the database shortly before the thumbnail Blob itself exists. The frontend handles that short delay by falling back to the original image.
+
+## Components
+
+| Component | Technology | Responsibility |
+| --- | --- | --- |
+| Frontend | Next.js, React, TypeScript | User interface and API calls |
+| Backend | Spring Boot, Java | Authentication, artwork logic, uploads, and queue messages |
+| Database | MongoDB locally / Cosmos DB Mongo API in Azure | Application data |
+| Storage | Azurite locally / Azure Blob Storage in Azure | Original images and thumbnails |
+| Queue | Azurite locally / Azure Queue Storage in Azure | Thumbnail jobs |
+| Worker | Java Azure Function | Generates thumbnails from queue messages |
+| Hosting | Azure Web Apps | Hosts the frontend and backend Docker containers |
+
+## Run locally
+
+Prerequisites:
+
+- Java 21 and Maven;
+- Node.js 20 or newer;
+- Docker Desktop;
+- Azure Functions Core Tools 4.
+
+Start MongoDB and Azurite from the repository root:
+
+```powershell
 docker compose up -d
 ```
 
-3. Run the following to stop the container
+Start the backend:
 
-```sh
-docker compose down
+```powershell
+cd backend
+mvn spring-boot:run
 ```
 
----
+Start the Function in a second terminal:
 
-### Front-end setup
-
-1.  Create a `.env.local` file in the `frontend/` directory:
-
-```dotenv
-NEXT_PUBLIC_BACKEND_URL=http://localhost:8080
+```powershell
+cd thumbnail-function
+Copy-Item local.settings.example.json local.settings.json
+mvn package
+mvn azure-functions:run
 ```
 
-This variable is used by all frontend service files (e.g. `auth.service.ts`, `artwork.service.ts`) to construct API call URLs.
+Start the frontend in a third terminal:
 
-2. Download the dependencies
-
-```bash
+```powershell
 cd frontend
-npm install
+$env:NEXT_PUBLIC_BACKEND_URL = 'http://localhost:8080'
+npm ci
+npm run dev
 ```
 
----
+Open `http://localhost:3000`. Swagger is available at `http://localhost:8080/swagger-ui.html`.
 
-wrapper, but make sure you are in the `backend/` directory so dotenv finds the `.env` file:
+Local settings files such as `.env`, `.env.local`, and `local.settings.json` are ignored because they can contain credentials.
 
-### Starting the back-end
+## Verify the project
 
-> ### Make sure the docker container is running before you run the backend
-
-1. Run Spring Boot. By default uses local databases defined in application.yaml
-
-```sh
+```powershell
 cd backend
-./mvnw spring-boot:run
+mvn clean test
+
+cd ../thumbnail-function
+mvn clean package
+
+cd ../frontend
+npm ci
+npm run lint
+npm run build
+
+cd ..
+az bicep build --file infra/main.bicep --stdout
 ```
 
-2. To run with production database:
+GitHub Actions runs these checks for pushes and pull requests to `main`. The existing image workflows build the frontend and backend Docker images and publish them to GitHub Container Registry.
 
-```sh
-cd backend
-$env:SPRING_PROFILES_ACTIVE = 'prod'
-$env:MONGODB_URI = 'string'
-$env:AZURITE_CONNECTION_STRING = 'otherstring'
-./mvnw spring-boot:run
+## Azure resources
+
+The Bicep template creates only services covered by the course:
+
+- an Azure Storage account with an `artworks` Blob container and `thumbnail-jobs` queue;
+- a Consumption-plan Java Azure Function;
+- a serverless Cosmos DB account using the Mongo API;
+- one Basic App Service plan with a frontend and backend Azure Web App.
+
+The frontend and backend share one App Service plan. This keeps the deployment simple, but they also share its compute capacity. Deployment commands and cost notes are in [infra/README.md](infra/README.md).
+
+## Project structure
+
+```text
+backend/             Spring Boot API and queue producer
+frontend/            Next.js application
+thumbnail-function/  Queue-triggered Java worker
+infra/               Azure Bicep infrastructure
+.github/workflows/   CI and Docker image workflows
 ```
-
-### Starting the front-end
-
-> ```bash
-> cd frontend
-> npm run dev
-> ```
->
-> The frontend starts on `http://localhost:3000`.
-
----
-
-## Swagger / API Documentation
-
-Once the backend is running, the interactive Swagger UI is available at:
-
-```
-http://localhost:8080/swagger-ui.html
-```
-
-The raw OpenAPI JSON spec is available at:
-
-```
-http://localhost:8080/v3/api-docs
-```
-
-### API Groups (tags)
-
-| Tag         | Base path    | Description                                |
-| ----------- | ------------ | ------------------------------------------ |
-| `auth`      | `/auth`      | Login, logout, authentication status       |
-| `accounts`  | `/accounts`  | Register, view and update user profiles    |
-| `artworks`  | `/artworks`  | CRUD, search, trending, like/unlike        |
-| `purchases` | `/purchases` | Purchase an artwork, view purchase history |
-
-### Public vs Protected Endpoints
-
-The following endpoints are accessible **without authentication**:
-
-- `POST /accounts` — register a new account
-- `GET /artworks`, `GET /artworks/{id}`, `GET /artworks/search`, `GET /artworks/trending`, `GET /artworks/{id}/likes`
-- `GET /accounts`, `GET /accounts/{id}`, `GET /accounts/{id}/artworks`
-- `POST /auth/login`
-- All Swagger UI and OpenAPI spec routes
-
-All other endpoints (create/update/delete artwork, purchase, like, logout, `/accounts/me`) **require an authenticated session cookie**.
-
----
-
-## Authentication
-
-The application uses a custom **stateless cookie-based token system** (not JWT):
-
-1. The client calls `POST /auth/login` with `{ "identifier": "username_or_email", "password": "..." }`.
-2. The backend validates the credentials, generates a unique token UID, stores it in the `tokens` table with an expiry, and sets an HTTP-only cookie named `cloud_native_engeneering_group2_session`.
-3. On every subsequent request, the `AuthTokenFilter` reads that cookie, looks up the token in the database, and if valid/not-expired, sets the Spring Security context.
-4. Calling `POST /auth/logout` clears the cookie. Passing `?hard=true` also revokes all tokens for that account.
-
-The `remember` parameter on login (`POST /auth/login?remember=true`) extends the token expiry for a longer session.
-
----
-
-## Frontend Styling
-
-The frontend uses **Tailwind CSS v4** with the PostCSS plugin (`@tailwindcss/postcss`).
-
-### Fonts
-
-Two Google Fonts are used, loaded via `next/font/google` in `app/layout.tsx`:
-
-| Font                    | CSS variable       | Usage                             |
-| ----------------------- | ------------------ | --------------------------------- |
-| **Inter**               | `--font-inter`     | Body text (`font-sans`)           |
-| **Bricolage Grotesque** | `--font-bricolage` | Display headings (`font-display`) |
-
-### Theme (Dark / Light / System)
-
-Theme support is implemented via `SettingsContext` in `src/context/SettingsContext.tsx`:
-
-- Three options: **Light**, **Dark**, **System** (follows OS preference).
-- The selected theme is persisted in `localStorage` under the key `"theme"`.
-- On change, the `"dark"` or `"light"` class is toggled on `<html>`.
-- Tailwind uses the `dark:` variant (configured in `globals.css` with `@custom-variant dark (&:where(.dark, .dark *))`).
-
-### CSS Variables
-
-Defined in `app/globals.css`:
-
-```css
-:root {
-	--background: #ffffff;
-	--foreground: #18181b;
-}
-
-.dark {
-	--background: #09090b;
-	--foreground: #fafafa;
-}
-```
-
-### Animations
-
-Custom `@keyframes` animations are defined in `globals.css` and used as utilities:
-`fade-in`, `fade-in-up`, `fade-in-down`, `scale-in`, `slide-in-right`, and scroll-reveal via `IntersectionObserver`.
-
----
-
-## Project Structure
-
-```
-├── backend/
-│   ├── src/main/java/com/group2/backend/
-│   │   ├── config/          # CORS, Dotenv, Jackson, OpenAPI configuration
-│   │   ├── controller/      # REST controllers (Account, Artwork, Auth, Purchase)
-│   │   ├── dto/             # Data Transfer Objects (request/response bodies)
-│   │   ├── exception/       # Custom exception classes & global error handler
-│   │   ├── model/           # JPA entities (Account, Artwork, ArtworkLike, Purchase, Token)
-│   │   ├── repository/      # Spring Data JPA repositories
-│   │   ├── security/        # AuthTokenFilter + SecurityConfig
-│   │   ├── seed/            # DatabaseSeeder (runs on "dev" profile only)
-│   │   └── service/         # Business logic services
-│   ├── src/main/resources/
-│   │   └── application.yaml
-│   └── .env                 # ← local environment variables (not committed)
-│
-└── frontend/
-    ├── app/                 # Next.js App Router pages
-    │   ├── page.tsx             # Home / gallery feed
-    │   ├── artwork/[id]/        # Artwork detail page
-    │   ├── profile/[id]/        # Artist profile page
-    │   ├── trending/            # Trending artworks
-    │   ├── purchases/           # Purchase history (authenticated)
-    │   └── upload/              # Upload new artwork (authenticated)
-    └── src/
-        ├── components/      # Reusable UI components (Navbar, ArtworkCard, AuthModal, …)
-        ├── context/         # React Contexts (AuthContext, SettingsContext)
-        ├── services/        # API service modules (auth, account, artwork, purchase)
-        └── types/           # TypeScript type definitions
-```
-
----
-
-## Seed Data
-
-When the backend is started with `SPRING_PROFILES_ACTIVE=dev`, the `DatabaseSeeder` (`@Profile("dev")`) runs automatically on startup via `CommandLineRunner`.
-
-It populates the database with:
-
-- **20 artist accounts** (usernames like `evasquez`, `mchen_studio`, `aisha_creates`, …) — all with the password `Password1!`
-- **60+ artworks** distributed across those artists, each with a title, description, price and a placeholder image URL
-- Random **likes** and **views** spread across artworks
-
-This gives you a fully populated gallery to work with locally without any manual data entry.
-
-> Seed data is **skipped** if accounts already exist in the database, so it is safe to restart the application.
