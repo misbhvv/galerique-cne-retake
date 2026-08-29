@@ -44,7 +44,11 @@ export default function ArtworkCard({ artwork, onLike, onTagSelect, priority }: 
 						}`}
 						onLoad={() => setImageLoaded(true)}
 						onError={() => {
-							setImageSrc("/logo/brandmark_squared.png");
+							setImageSrc((current) =>
+								current === artwork.thumbnailUrl && artwork.imageUrl
+									? artwork.imageUrl
+									: "/logo/brandmark_squared.png",
+							);
 							setImageLoaded(true);
 						}}
 						loading={priority ? "eager" : "lazy"}
