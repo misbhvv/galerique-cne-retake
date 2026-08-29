@@ -93,10 +93,6 @@ export default function HomePage() {
 	}, []);
 
 	useEffect(() => {
-		loadArtworks(0, true);
-	}, [loadArtworks]);
-
-	useEffect(() => {
 		loadPopularTags();
 	}, [loadPopularTags]);
 
