@@ -6,3 +6,4 @@ _modules/
 .gradle/
 .idea/
 target/
+local.settings.json
