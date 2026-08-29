@@ -13,6 +13,9 @@ param tags object = {
   managedBy: 'bicep'
 }
 
+@description('Database name used by the Spring Boot application.')
+param mongoDatabaseName string = 'cloudnativeengineeringproject'
+
 var suffix = uniqueString(subscription().subscriptionId, resourceGroup().id)
 var storageAccountName = take('gal${suffix}', 24)
 var functionAppName = take(toLower('${appName}-thumbnails-${suffix}'), 60)
@@ -20,6 +23,7 @@ var functionContentShare = take(toLower(replace('${appName}${suffix}fn', '-', ''
 var thumbnailQueueName = 'thumbnail-jobs'
 var artworkContainerName = 'artworks'
 var storageConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
+var mongoConnectionString = replace(mongoAccount.listConnectionStrings().connectionStrings[0].connectionString, '/?', '/${mongoDatabaseName}?')
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageAccountName
@@ -59,6 +63,49 @@ resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2023-05-0
 resource thumbnailQueue 'Microsoft.Storage/storageAccounts/queueServices/queues@2023-05-01' = {
   parent: queueService
   name: thumbnailQueueName
+}
+
+resource mongoAccount 'Microsoft.DocumentDB/databaseAccounts@2024-11-15' = {
+  name: take(toLower('${appName}-mongo-${suffix}'), 44)
+  location: location
+  tags: tags
+  kind: 'MongoDB'
+  properties: {
+    databaseAccountOfferType: 'Standard'
+    apiProperties: {
+      serverVersion: '4.2'
+    }
+    capabilities: [
+      {
+        name: 'EnableMongo'
+      }
+      {
+        name: 'EnableServerless'
+      }
+    ]
+    consistencyPolicy: {
+      defaultConsistencyLevel: 'Session'
+    }
+    locations: [
+      {
+        locationName: location
+        failoverPriority: 0
+        isZoneRedundant: false
+      }
+    ]
+    minimalTlsVersion: 'Tls12'
+    publicNetworkAccess: 'Enabled'
+  }
+}
+
+resource mongoDatabase 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases@2024-11-15' = {
+  parent: mongoAccount
+  name: mongoDatabaseName
+  properties: {
+    resource: {
+      id: mongoDatabaseName
+    }
+  }
 }
 
 resource functionPlan 'Microsoft.Web/serverfarms@2023-12-01' = {
@@ -130,3 +177,4 @@ output functionAppName string = thumbnailFunction.name
 output storageAccountName string = storageAccount.name
 output artworkContainerName string = artworkContainer.name
 output thumbnailQueueName string = thumbnailQueue.name
+output mongoAccountName string = mongoAccount.name
