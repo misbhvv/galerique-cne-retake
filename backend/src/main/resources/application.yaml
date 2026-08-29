@@ -60,4 +60,4 @@ spring:
 app:
     cookie:
         domain: ${COOKIE_DOMAIN:}
-        same-site: Strict
+        same-site: None
