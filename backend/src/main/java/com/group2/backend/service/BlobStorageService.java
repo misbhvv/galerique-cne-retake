@@ -4,6 +4,7 @@ import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobContainerClientBuilder;
 import com.azure.storage.blob.models.BlobHttpHeaders;
 import com.azure.storage.blob.models.PublicAccessType;
+import com.group2.backend.config.ArtworkImageUploadProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,15 +16,18 @@ import java.io.ByteArrayInputStream;
 public class BlobStorageService {
 
     private final BlobContainerClient containerClient;
+    private final int thumbnailCacheVersion;
 
     public BlobStorageService(
         @Value("${app.blob.connection-string}") String connectionString,
-        @Value("${app.blob.container-name}") String containerName
+        @Value("${app.blob.container-name}") String containerName,
+        ArtworkImageUploadProperties uploadProperties
     ) {
         this.containerClient = new BlobContainerClientBuilder()
             .connectionString(connectionString)
             .containerName(containerName)
             .buildClient();
+        this.thumbnailCacheVersion = uploadProperties.getThumbnailMaxWidth();
 
         this.containerClient.createIfNotExists();
         // Allow anonymous read access to individual blobs so browsers can load image URLs directly
@@ -55,7 +59,10 @@ public class BlobStorageService {
         if (blobName == null || blobName.isBlank()) {
             return null;
         }
-        return containerClient.getBlobClient(blobName).getBlobUrl();
+        String blobUrl = containerClient.getBlobClient(blobName).getBlobUrl();
+        return blobName.contains("/thumbnails/")
+            ? blobUrl + "?v=" + thumbnailCacheVersion
+            : blobUrl;
     }
 
     public void deleteAll() {
