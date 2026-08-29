@@ -4,14 +4,12 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 
 @Document(collection = "artwork_likes")
-@CompoundIndex(name = "account_artwork_idx", def = "{'account': 1, 'artwork': 1}", unique = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
