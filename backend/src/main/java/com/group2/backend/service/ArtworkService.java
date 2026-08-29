@@ -15,6 +15,7 @@ import com.group2.backend.repository.ArtworkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +42,7 @@ public class ArtworkService {
     private final ArtworkImageService artworkImageService;
     private final TagService tagService;
 
+    @Cacheable(value = "artworkLists", key = "#page + ':' + #size + ':' + (#sort == null ? '' : #sort)")
     public Page<ArtworkSummaryDto> listArtworks(int page, int size, String sort) {
         Pageable pageable = buildPageable(page, size, sort);
         return artworkRepository.findAll(pageable).map(this::toSummaryDto);
@@ -55,7 +57,10 @@ public class ArtworkService {
         return toDto(saved);
     }
 
-    @CacheEvict(value = "accountArtworks", allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "accountArtworks", allEntries = true),
+        @CacheEvict(value = "artworkLists", allEntries = true)
+    })
     public ArtworkDto createArtwork(ArtworkCreateDto body) {
         validateCreateBody(body);
         Account creator = authService.getAccountFromRequest();
@@ -73,7 +78,10 @@ public class ArtworkService {
         return toDto(saved);
     }
 
-    @CacheEvict(value = "accountArtworks", allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "accountArtworks", allEntries = true),
+        @CacheEvict(value = "artworkLists", allEntries = true)
+    })
     public ArtworkDto updateArtwork(String id, ArtworkUpdateDto body) {
         Artwork artwork = artworkRepository.findById(id)
             .orElseThrow(() -> new ServiceException("Artwork not found", HttpStatus.NOT_FOUND));
@@ -104,7 +112,10 @@ public class ArtworkService {
         return toDto(saved);
     }
 
-    @CacheEvict(value = "accountArtworks", allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "accountArtworks", allEntries = true),
+        @CacheEvict(value = "artworkLists", allEntries = true)
+    })
     public void deleteArtwork(String id) {
         Artwork artwork = artworkRepository.findById(id)
             .orElseThrow(() -> new ServiceException("Artwork not found", HttpStatus.NOT_FOUND));

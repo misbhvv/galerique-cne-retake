@@ -12,6 +12,7 @@ import com.group2.backend.repository.ArtworkImageRepository;
 import com.group2.backend.repository.ArtworkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +44,7 @@ public class ArtworkImageService {
             .toList();
     }
 
+    @CacheEvict(value = {"artworkLists", "accountArtworks"}, allEntries = true)
     public List<ArtworkImageDto> uploadImages(String artworkId, List<MultipartFile> files) {
         Artwork artwork = findArtwork(artworkId);
         verifyOwner(artwork);
@@ -122,6 +124,7 @@ public class ArtworkImageService {
         }
     }
 
+    @CacheEvict(value = {"artworkLists", "accountArtworks"}, allEntries = true)
     public ArtworkImageDto setMainImage(String artworkId, String imageId) {
         Artwork artwork = findArtwork(artworkId);
         verifyOwner(artwork);
@@ -180,6 +183,7 @@ public class ArtworkImageService {
             .toList();
     }
 
+    @CacheEvict(value = {"artworkLists", "accountArtworks"}, allEntries = true)
     public void deleteImage(String artworkId, String imageId) {
         Artwork artwork = findArtwork(artworkId);
         verifyOwner(artwork);

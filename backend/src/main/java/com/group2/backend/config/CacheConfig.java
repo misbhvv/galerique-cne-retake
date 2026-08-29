@@ -19,6 +19,7 @@ public class CacheConfig {
         manager.setCaches(List.of(
             build("tagSuggestions",   5,  200),
             build("popularTags",     15,  100),
+            build("artworkLists",     2,  100),
             build("trendingArtworks",10,   50),
             build("accountArtworks",  5,  300),
             build("likeCounts",       2, 1000),
